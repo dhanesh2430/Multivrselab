@@ -77,8 +77,9 @@ export const SocketProvider = ({ children }) => {
     // Fetch initial notifications
     fetchNotifications();
 
-    // Create socket with JWT in handshake
-    const socketUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    // Create socket with JWT in handshake (strip trailing /api suffix if present)
+    const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const socketUrl = rawApiUrl.replace(/\/api\/?$/, '');
     const socket = io(socketUrl, {
       auth: { token },
       transports: ['websocket', 'polling'],

@@ -10,7 +10,22 @@ const app = express();
 const httpServer = http.createServer(app);
 
 // ── Middleware ──────────────────────────────────────────────────────────
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173', credentials: true }));
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'https://multivrselab.vercel.app'
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy violation'), false);
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // Request logger middleware

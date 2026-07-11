@@ -12,9 +12,21 @@ const onlineUsers = new Map(); // userId -> set of socketIds
 const initSocket = (httpServer) => {
   const { Server } = require('socket.io');
 
+  const allowedOrigins = [
+    process.env.CLIENT_URL,
+    'http://localhost:5173',
+    'https://multivrselab.vercel.app'
+  ].filter(Boolean);
+
   io = new Server(httpServer, {
     cors: {
-      origin: process.env.CLIENT_URL || 'http://localhost:5173',
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+          callback(null, true);
+        } else {
+          callback(new Error('CORS policy violation'));
+        }
+      },
       methods: ['GET', 'POST'],
       credentials: true,
     },

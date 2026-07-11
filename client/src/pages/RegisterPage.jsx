@@ -20,8 +20,13 @@ export default function RegisterPage() {
     setError('');
     if (form.password !== form.confirm) return setError('Passwords do not match.');
     if (form.password.length < 6) return setError('Password must be at least 6 characters.');
-    const result = await register(form.username, form.email, form.password);
-    if (!result.success) setError(result.message);
+    try {
+      const result = await register(form.username, form.email, form.password);
+      if (!result.success) setError(result.message);
+    } catch (err) {
+      const errMsg = err.response?.data?.message || err.response?.data?.error || err.message || 'Registration failed.';
+      setError(errMsg);
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -19,7 +19,7 @@ const PublicRoute = ({ children }) => {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
@@ -29,5 +29,5 @@ export default function App() {
         <Route path="/group/:id" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
         <Route path="/habit/:id" element={<ProtectedRoute><HabitDetailsPage /></ProtectedRoute>} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );}
